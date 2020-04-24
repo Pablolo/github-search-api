@@ -1,24 +1,13 @@
 import React, { Component } from 'react';
 
 class Results extends Component {
-
-  renderResults = () => {
-    const { users, query } = this.props;
-    console.log(users)
-    return users.map(item => {
-      if (item.login.toLowerCase().includes(query.toLowerCase())) {
-        return <li>{item.login}</li>;
-      } else {
-        return item;
-      }
-    })
-  }
-
   render() {
+    const { users } = this.props;
+    console.log('useeers', users);
     return (
       <div>
         <ul>
-          {this.renderResults()}
+          {users.map((item, index) => <li className='list-items' key={index}>{item.login}</li>)}
         </ul>
       </div>
     );

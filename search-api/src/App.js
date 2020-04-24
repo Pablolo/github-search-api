@@ -13,26 +13,37 @@ const STATUS = {
 class App extends Component {
 
   state = {
-    status: STATUS.LOADING,
+    status: STATUS.LOADED,
     query: '',
     users: [],
   }
 
-  componentDidMount() {
-    axios.get(`https://api.github.com/search/users?q=tom`)
-      .then(response => {
-        // console.log(response.data.items);
-        this.setState({
-          users: response.data.items,
-          status: STATUS.LOADED,
-        })
+  // componentDidMount() {
+  //   axios.get(`https://api.github.com/search/users`)
+  //     .then(response => {
+  //       console.log("response", response.data);
+  //       this.setState({
+  //         // users: response.data.items,
+  //         status: STATUS.LOADED,
+  //       })
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     })
+  // }
+
+  clickSearch = () => {
+    axios.get(`https://api.github.com/search/users?q=${this.state.query}`)
+    .then(response => {
+      console.log("response", response.data);
+      this.setState({
+        users: response.data.items,
+        status: STATUS.LOADED,
       })
-      .catch(function (error) {
-        console.log(error);
-        // this.setState({
-        //   status: STATUS.ERROR,
-        // })
-      })
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
   }
 
   search = (e) => {
@@ -42,7 +53,7 @@ class App extends Component {
   }
 
   render() {
-    const { users, query, status } = this.state;
+    const { users, status } = this.state;
     // eslint-disable-next-line default-case
     switch (status) {
       case STATUS.LOADING:
@@ -51,7 +62,8 @@ class App extends Component {
         return <div className="App">
         <h1>GitHub Search</h1>
         <SearchBar searchQuery={this.search} />
-        <Results users={users} query={query}/>
+        <button onClick={this.clickSearch} className="search-btn">Search</button>
+        <Results users={users} />
         </div>
       case STATUS.ERROR:
         return <div>Error</div>

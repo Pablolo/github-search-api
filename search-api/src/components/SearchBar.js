@@ -10,7 +10,6 @@ class SearchBar extends Component {
     return (
       <div>
         <input type="text" onChange={this.search}/><br/>
-        <button className="search-btn">Search</button>
       </div>
     );
   }

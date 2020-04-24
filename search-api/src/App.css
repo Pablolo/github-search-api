@@ -6,3 +6,7 @@
   cursor: pointer;
   margin-top: 1rem;
 }
+
+.list-items {
+  list-style-type: none;
+}
