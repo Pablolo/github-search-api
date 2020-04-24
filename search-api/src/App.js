@@ -5,6 +5,7 @@ import axios from 'axios';
 import './App.css';
 
 const STATUS = {
+    WAITING: "WAITING",
     LOADING: "LOADING",
     LOADED: "LOADED",
     ERROR: "ERROR",
@@ -13,26 +14,14 @@ const STATUS = {
 class App extends Component {
 
   state = {
-    status: STATUS.LOADED,
+    status: STATUS.WAITING,
     query: '',
     users: [],
+    error: '',
   }
 
-  // componentDidMount() {
-  //   axios.get(`https://api.github.com/search/users`)
-  //     .then(response => {
-  //       console.log("response", response.data);
-  //       this.setState({
-  //         // users: response.data.items,
-  //         status: STATUS.LOADED,
-  //       })
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     })
-  // }
-
   clickSearch = () => {
+    this.setState({status: STATUS.LOADING})
     axios.get(`https://api.github.com/search/users?q=${this.state.query}`)
     .then(response => {
       console.log("response", response.data);
@@ -41,8 +30,11 @@ class App extends Component {
         status: STATUS.LOADED,
       })
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch((error) => {
+      this.setState({
+        error: error.name,
+        status: STATUS.ERROR,
+      });
     })
   }
 
@@ -54,20 +46,17 @@ class App extends Component {
 
   render() {
     const { users, status } = this.state;
-    // eslint-disable-next-line default-case
-    switch (status) {
-      case STATUS.LOADING:
-        return <div>Loading...</div>
-      case STATUS.LOADED:
-        return <div className="App">
-        <h1>GitHub Search</h1>
+    return (
+      <div className="App">
+        <h1 className="title">GitHub Search</h1>
         <SearchBar searchQuery={this.search} />
         <button onClick={this.clickSearch} className="search-btn">Search</button>
-        <Results users={users} />
-        </div>
-      case STATUS.ERROR:
-        return <div>Error</div>
-    }
+        {status === STATUS.WAITING && <div className="waiting-phrase">Write something and click on the search button...</div>}
+        {status === STATUS.LOADING && <div className="waiting-phrase">Loading...</div>}
+        {status === STATUS.LOADED && <Results users={users} />}
+        {status === STATUS.ERROR && <div className="waiting-phrase">{this.state.error}, search something.</div>}
+      </div>
+    );
   }
 }
 

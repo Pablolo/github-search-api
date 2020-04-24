@@ -7,7 +7,7 @@ class Results extends Component {
     return (
       <div>
         <ul>
-          {users.map((item, index) => <li className='list-items' key={index}>{item.login}</li>)}
+          {users.map((item, index) => <a key={index} href={item.html_url}><li className='list-items'>{item.login}</li></a>)}
         </ul>
       </div>
     );
